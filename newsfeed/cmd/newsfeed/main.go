@@ -4,9 +4,9 @@ import (
 	"time"
 
 	"github.com/ssouthcity/failsafe/newsfeed"
-	"github.com/ssouthcity/failsafe/newsfeed/repositories/terminal"
-	"github.com/ssouthcity/failsafe/newsfeed/sources/aggregator"
-	"github.com/ssouthcity/failsafe/newsfeed/sources/mock"
+	"github.com/ssouthcity/failsafe/newsfeed/aggregator"
+	"github.com/ssouthcity/failsafe/newsfeed/mock"
+	"github.com/ssouthcity/failsafe/newsfeed/terminal"
 )
 
 func main() {
