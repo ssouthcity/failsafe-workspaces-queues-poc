@@ -11,6 +11,10 @@ func NewRepository() *TerminalRepository {
 	return &TerminalRepository{}
 }
 
-func (r *TerminalRepository) SaveArticle(article *newsfeed.Article) {
-	slog.With("article", article.Title).Info("new article")
+func (r *TerminalRepository) SaveStory(story newsfeed.Story) {
+	slog.Info("story received",
+		slog.String("headline", story.Article.Headline),
+		slog.String("source", story.Source.Name),
+		slog.Time("time", story.PublishedAt),
+	)
 }
