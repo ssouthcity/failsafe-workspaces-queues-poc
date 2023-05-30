@@ -33,9 +33,9 @@ func (harvester *MockHarvester) HarvestNews(ctx context.Context, out chan newsfe
 			story := newsfeed.Story{
 				Source: harvester.source,
 				Article: newsfeed.Article{
-					Headline: strconv.Itoa(i),
+					Headline:    strconv.Itoa(i),
+					PublishedAt: time.Now(),
 				},
-				PublishedAt: time.Now(),
 			}
 
 			out <- story

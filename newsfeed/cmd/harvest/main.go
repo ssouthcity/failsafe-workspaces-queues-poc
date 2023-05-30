@@ -4,6 +4,8 @@ import (
 	"time"
 
 	"github.com/ssouthcity/failsafe/newsfeed"
+	"github.com/ssouthcity/failsafe/newsfeed/bungieblog"
+	"github.com/ssouthcity/failsafe/newsfeed/bungieblog/inmem"
 	"github.com/ssouthcity/failsafe/newsfeed/mock"
 	"github.com/ssouthcity/failsafe/newsfeed/terminal"
 )
@@ -13,13 +15,11 @@ func main() {
 		Name: "Mock Fast",
 	}, time.Second*5)
 
-	mockSrc2 := mock.NewHarvester(newsfeed.Source{
-		Name: "Mock Slow",
-	}, time.Second*10)
+	bungieBlogSrc := bungieblog.NewHarvester(10*time.Second, inmem.NewStore())
 
 	aggregatorSrc := newsfeed.NewAggregator().
 		AddSource(mockSrc).
-		AddSource(mockSrc2)
+		AddSource(bungieBlogSrc)
 
 	terminalRepo := terminal.NewRepository()
 

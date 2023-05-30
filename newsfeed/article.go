@@ -1,5 +1,8 @@
 package newsfeed
 
+import "time"
+
 type Article struct {
-	Headline string
+	Headline    string
+	PublishedAt time.Time
 }
