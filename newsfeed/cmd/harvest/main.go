@@ -11,19 +11,19 @@ import (
 )
 
 func main() {
-	mockSrc := mock.NewHarvester(newsfeed.Source{
+	mockHarvester := mock.NewHarvester(newsfeed.Source{
 		Name: "Mock Fast",
 	}, time.Second*5)
 
-	bungieBlogSrc := bungieblog.NewHarvester(10*time.Second, inmem.NewStore())
+	bungieBlogHarvester := bungieblog.NewHarvester(10*time.Second, inmem.NewStore())
 
-	aggregatorSrc := newsfeed.NewAggregator().
-		AddSource(mockSrc).
-		AddSource(bungieBlogSrc)
+	aggregator := newsfeed.NewAggregator().
+		AddSource(mockHarvester).
+		AddSource(bungieBlogHarvester)
 
 	terminalRepo := terminal.NewRepository()
 
-	collector := newsfeed.NewDispatcher(aggregatorSrc, terminalRepo)
+	dispatcher := newsfeed.NewDispatcher(aggregator, terminalRepo)
 
-	collector.ListenForNews()
+	dispatcher.ListenForNews()
 }
