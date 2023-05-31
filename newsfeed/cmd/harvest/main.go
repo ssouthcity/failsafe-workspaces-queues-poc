@@ -11,9 +11,13 @@ import (
 )
 
 func main() {
+	inmemDupeStore := inmem.NewDupeStore()
+
+	terminalRepo := terminal.NewRepository()
+
 	mockHarvester := mock.NewHarvester(newsfeed.Source{
-		Name: "Mock Fast",
-	}, time.Second*5)
+		Name: "Second Counter",
+	}, time.Second*1)
 
 	bungieBlogHarvester := bungieblog.NewHarvester(10 * time.Second)
 
@@ -21,9 +25,7 @@ func main() {
 		AddSource(mockHarvester).
 		AddSource(bungieBlogHarvester)
 
-	dupeFilter := newsfeed.NewDuplicateFilter(inmem.NewDupeStore(), aggregator)
-
-	terminalRepo := terminal.NewRepository()
+	dupeFilter := newsfeed.NewDuplicateFilter(inmemDupeStore, aggregator)
 
 	dispatcher := newsfeed.NewDispatcher(dupeFilter, terminalRepo)
 

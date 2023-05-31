@@ -3,12 +3,12 @@ package newsfeed
 import "context"
 
 type Dispatcher struct {
-	producer   NewsHarvester
-	repository NewsRepository
+	harvester  NewsHarvester
+	repository StoryRepository
 }
 
-func NewDispatcher(producer NewsHarvester, repository NewsRepository) *Dispatcher {
-	return &Dispatcher{producer, repository}
+func NewDispatcher(harvester NewsHarvester, repository StoryRepository) *Dispatcher {
+	return &Dispatcher{harvester, repository}
 }
 
 func (dispatcher *Dispatcher) ListenForNews() {
@@ -17,7 +17,7 @@ func (dispatcher *Dispatcher) ListenForNews() {
 
 	storyChannel := make(chan Story)
 
-	go dispatcher.producer.HarvestNews(ctx, storyChannel)
+	go dispatcher.harvester.HarvestNews(ctx, storyChannel)
 
 	for {
 		select {
