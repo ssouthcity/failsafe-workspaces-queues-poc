@@ -1,5 +1,5 @@
 package newsfeed
 
 type NewsRepository interface {
-	SaveStory(Story)
+	SaveStory(Story) error
 }

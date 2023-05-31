@@ -11,10 +11,12 @@ func NewRepository() *TerminalRepository {
 	return &TerminalRepository{}
 }
 
-func (r *TerminalRepository) SaveStory(story newsfeed.Story) {
+func (r *TerminalRepository) SaveStory(story newsfeed.Story) error {
 	slog.Info("story received",
 		slog.String("headline", story.Article.Headline),
 		slog.String("source", story.Source.Name),
 		slog.Time("time", story.Article.PublishedAt),
 	)
+
+	return nil
 }

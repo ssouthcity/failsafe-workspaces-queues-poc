@@ -8,12 +8,11 @@ import (
 )
 
 type BungieBlogHarvester struct {
-	pollingRate        time.Duration
-	duplicatePostStore DuplicatePostStore
+	pollingRate time.Duration
 }
 
-func NewHarvester(pollingRate time.Duration, duplicatePostStore DuplicatePostStore) *BungieBlogHarvester {
-	return &BungieBlogHarvester{pollingRate, duplicatePostStore}
+func NewHarvester(pollingRate time.Duration) *BungieBlogHarvester {
+	return &BungieBlogHarvester{pollingRate}
 }
 
 func (harvester *BungieBlogHarvester) HarvestNews(ctx context.Context, out chan newsfeed.Story) {
@@ -21,8 +20,7 @@ func (harvester *BungieBlogHarvester) HarvestNews(ctx context.Context, out chan 
 	defer ticker.Stop()
 
 	rssFeed := createBungieBlogStream(ctx, harvester.pollingRate)
-	filteredRssFeed := removeSeenPosts(harvester.duplicatePostStore, rssFeed)
-	articleFeed := mapPostToArticle(filteredRssFeed)
+	articleFeed := mapPostToArticle(rssFeed)
 
 	for {
 		select {

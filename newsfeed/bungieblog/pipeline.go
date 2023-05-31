@@ -38,29 +38,6 @@ func createBungieBlogStream(ctx context.Context, pollingRate time.Duration) chan
 	return postFeed
 }
 
-func removeSeenPosts(store DuplicatePostStore, input chan RssPost) chan RssPost {
-	output := make(chan RssPost)
-
-	go func() {
-		for post := range input {
-			if store.HasSeenPost(post) {
-				slog.Debug("skipping seen post", slog.String("post", post.Title))
-				continue
-			}
-
-			err := store.AddPost(post)
-			if err != nil {
-				slog.Error("error while adding post to duplication store", slog.String("error", err.Error()))
-				continue
-			}
-
-			output <- post
-		}
-	}()
-
-	return output
-}
-
 func mapPostToArticle(input chan RssPost) chan newsfeed.Article {
 	output := make(chan newsfeed.Article)
 
