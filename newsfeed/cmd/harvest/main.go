@@ -7,13 +7,18 @@ import (
 	"github.com/ssouthcity/failsafe/newsfeed/bungieblog"
 	"github.com/ssouthcity/failsafe/newsfeed/inmem"
 	"github.com/ssouthcity/failsafe/newsfeed/mock"
-	"github.com/ssouthcity/failsafe/newsfeed/terminal"
+	"github.com/ssouthcity/failsafe/newsfeed/rabbitmq"
+	"golang.org/x/exp/slog"
 )
 
 func main() {
 	inmemDupeStore := inmem.NewDupeStore()
 
-	terminalRepo := terminal.NewRepository()
+	rabbitRepo, err := rabbitmq.NewStoryRepository("amqp://guest:guest@localhost:5672", "failsafe.newsfeed")
+	if err != nil {
+		slog.Error("unable to connect to rabbitmq", slog.String("error", err.Error()))
+		return
+	}
 
 	mockHarvester := mock.NewHarvester(newsfeed.Source{
 		Name: "Second Counter",
@@ -27,7 +32,7 @@ func main() {
 
 	dupeFilter := newsfeed.NewDuplicateFilter(inmemDupeStore, aggregator)
 
-	dispatcher := newsfeed.NewDispatcher(dupeFilter, terminalRepo)
+	dispatcher := newsfeed.NewDispatcher(dupeFilter, rabbitRepo)
 
 	dispatcher.ListenForNews()
 }
