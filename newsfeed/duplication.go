@@ -36,7 +36,7 @@ func (filter *DuplicateStoryFilter) HarvestNews(ctx context.Context, output chan
 
 			err := filter.store.AddStory(story)
 			if err != nil {
-				slog.Error("unable to add story to dupe store", slog.String("error", err.Error()))
+				slog.Error("unable to add story to dupe store", slog.Any("err", err))
 				continue
 			}
 

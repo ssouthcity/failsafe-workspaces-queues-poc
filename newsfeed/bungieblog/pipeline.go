@@ -24,7 +24,7 @@ func createBungieBlogStream(ctx context.Context, pollingRate time.Duration) chan
 			case <-ticker.C:
 				rss, err := fetchRssFeed()
 				if err != nil {
-					slog.Error("unable to read rss feed", slog.String("error", err.Error()))
+					slog.Error("unable to read rss feed", slog.Any("err", err))
 					continue
 				}
 
@@ -45,7 +45,7 @@ func mapPostToArticle(input chan RssPost) chan newsfeed.Article {
 		for post := range input {
 			pubdate, err := time.Parse("Mon, 2 Jan 2006 15:04:05 MST", post.PubDate)
 			if err != nil {
-				slog.Error("invalid time format", slog.String("error", err.Error()))
+				slog.Error("invalid time format", slog.Any("err", err))
 				continue
 			}
 
