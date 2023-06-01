@@ -16,9 +16,6 @@ func NewHarvester(pollingRate time.Duration) *BungieBlogHarvester {
 }
 
 func (harvester *BungieBlogHarvester) HarvestNews(ctx context.Context, out chan newsfeed.Story) {
-	ticker := time.NewTicker(harvester.pollingRate)
-	defer ticker.Stop()
-
 	rssFeed := createBungieBlogStream(ctx, harvester.pollingRate)
 	articleFeed := mapPostToArticle(rssFeed)
 

@@ -5,8 +5,8 @@ import (
 
 	"github.com/ssouthcity/failsafe/newsfeed"
 	"github.com/ssouthcity/failsafe/newsfeed/bungieblog"
+	"github.com/ssouthcity/failsafe/newsfeed/bungiehelp"
 	"github.com/ssouthcity/failsafe/newsfeed/inmem"
-	"github.com/ssouthcity/failsafe/newsfeed/mock"
 	"github.com/ssouthcity/failsafe/newsfeed/rabbitmq"
 	"golang.org/x/exp/slog"
 )
@@ -20,14 +20,12 @@ func main() {
 		return
 	}
 
-	mockHarvester := mock.NewHarvester(newsfeed.Source{
-		Name: "Second Counter",
-	}, time.Second*1)
+	bungieHelpHarvester := bungiehelp.NewHarvester(15 * time.Second)
 
-	bungieBlogHarvester := bungieblog.NewHarvester(10 * time.Second)
+	bungieBlogHarvester := bungieblog.NewHarvester(15 * time.Second)
 
 	aggregator := newsfeed.NewAggregator().
-		AddSource(mockHarvester).
+		AddSource(bungieHelpHarvester).
 		AddSource(bungieBlogHarvester)
 
 	dupeFilter := newsfeed.NewDuplicateFilter(inmemDupeStore, aggregator)

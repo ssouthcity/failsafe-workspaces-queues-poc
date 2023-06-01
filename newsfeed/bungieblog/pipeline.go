@@ -2,6 +2,7 @@ package bungieblog
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/ssouthcity/failsafe/newsfeed"
@@ -51,6 +52,9 @@ func mapPostToArticle(input chan RssPost) chan newsfeed.Article {
 
 			article := newsfeed.Article{
 				Headline:    post.Title,
+				Content:     post.Description,
+				Url:         fmt.Sprintf("https://www.bungie.net%s", post.Link),
+				Thumbnail:   post.Image,
 				PublishedAt: pubdate,
 			}
 
