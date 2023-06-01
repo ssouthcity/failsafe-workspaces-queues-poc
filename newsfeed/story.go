@@ -8,3 +8,8 @@ type Story struct {
 type StoryRepository interface {
 	SaveStory(Story) error
 }
+
+type StorySerializer interface {
+	Encode(Story) ([]byte, error)
+	Decode([]byte) (Story, error)
+}

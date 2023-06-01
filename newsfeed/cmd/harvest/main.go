@@ -14,7 +14,7 @@ import (
 func main() {
 	inmemDupeStore := inmem.NewDupeStore()
 
-	rabbitRepo, err := rabbitmq.NewStoryRepository("amqp://guest:guest@localhost:5672", "failsafe.newsfeed")
+	rabbitRepo, err := rabbitmq.NewStoryRepository("amqp://guest:guest@localhost:5672", "failsafe.newsfeed", "application/msgpack")
 	if err != nil {
 		slog.Error("unable to connect to rabbitmq", slog.Any("err", err))
 		return

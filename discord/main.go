@@ -2,6 +2,7 @@ package main
 
 import (
 	amqp "github.com/rabbitmq/amqp091-go"
+	"github.com/ssouthcity/failsafe/newsfeed/serializers"
 	"golang.org/x/exp/slog"
 )
 
@@ -38,8 +39,23 @@ func main() {
 		return
 	}
 
+	serializer, err := serializers.NewFromContentType("application/msgpack")
+	if err != nil {
+		slog.Error("unable to get correct serializer", slog.Any("err", err))
+		return
+	}
+
 	for msg := range msgs {
-		stringified := string(msg.Body)
-		slog.Info(stringified)
+		story, err := serializer.Decode(msg.Body)
+		if err != nil {
+			slog.Error("unable to deserialize story", slog.Any("err", err))
+			return
+		}
+
+		slog.Info("new story", slog.Group("story",
+			slog.String("title", story.Article.Headline),
+			slog.String("url", story.Article.Url),
+			slog.Time("published", story.Article.PublishedAt),
+		))
 	}
 }
